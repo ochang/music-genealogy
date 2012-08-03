@@ -1,6 +1,7 @@
 # BEGIN IMPORTS
 import os
 import sys
+import codecs
 
 from bs4 import BeautifulSoup
 # END IMPORTS
@@ -24,31 +25,22 @@ def findlists(soup_tag):
     """   
     # [African, [Afrobeat, Apala, Benga,...]]
     # [Rock, [Alternative Rock, [Britpop, [Post-Britpop]]]]
+    pass
 
-    abs_base = get_string(soup_tag)
-    mixins = ''
-    conns = []
-    
-    while True:
-        snake = abs_base + mixins
+def create_gv():
+    with codecs.open('out.gv', 'w', 'utf-8-sig') as X:
+            X.write('graph testing {\n')
+            X.write('     node [fontname=Gotham,shape=box]\n')
 
-        print 'NEW LOOP CYCLE'
-        print soup_tag
+            for item in data:
+                tmp = item.split('--')
+                information = '"%s" -- "%s"' % (tmp[0].strip(), tmp[1].strip())
 
-        new_tag = soup_tag.select('ul > li')
-        # if there are no more lists
-        if new_tag == []:
-            conns.append(snake)
-            print 'FINISHED CYCLE'
-            print conns
-            return conns
-        else:
-            for x in new_tag:
-                statement = ' -- ' + get_string(soup_tag) + ' -- ' + get_string(x)
-                print statement
-                mixins += statement
+                pseudotab = '     '
+                string = pseudotab + information + ';\n'
+                X.write(string)
 
-        soup_tag = new_tag
+            X.write('}')    
 
 # END DEFINITIONS
 
@@ -69,20 +61,27 @@ for heading in genre_soup:
     # ...get the name of the genre...
     genre = resultset[0].string
 
-    # ...then find the next div after the genre h3 tag...
-    div_after = heading.find_next('div')
-    # ...then get the subgenres listed there...
-    subgenres = div_after.select('ul > li')
+    # ...then find the next group of lists after the genre h3 tag...
+    while True:
+        try:
+            heading = heading.next_sibling
+        except AttributeError: break
+
+        # ...then get the subgenres listed there...
+        try:
+            if heading.name == 'div':
+                subgenres = heading.select('ul > li')
+                break
+            elif heading.name == 'ul':
+                subgenres = heading.select('li')
+                break
+        except AttributeError: pass
 
     # ...then iterate through the subgenres to search for subheadings
+    print genre
+    print subgenres
     for y in subgenres:
-        data.append(genre + get_string(y))
+        data.append(genre + ' -- ' + get_string(y))
 
-        print '\n'
-        print y
-        z = findlists(y)
-        
-        for p in z:
-            data.append(p)
 
-print data
+create_gv()
