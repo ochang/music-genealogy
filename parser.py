@@ -16,22 +16,7 @@ def get_string(tag):
         ls = tag.find('a')
         return ls.string
     else:
-        return s
-
-def create_gv():
-    with codecs.open('out.gv', 'w', 'utf-8-sig') as X:
-            X.write('graph testing {\n')
-            X.write('     node [fontname=Gotham,shape=box]\n')
-
-            for item in data:
-                tmp = item.split('--')
-                information = '"%s" -- "%s"' % (tmp[0].strip(), tmp[1].strip())
-
-                pseudotab = '     '
-                string = pseudotab + information + ';\n'
-                X.write(string)
-
-            X.write('}')    
+        return s    
 # END DEFINITIONS
 
 
@@ -46,6 +31,8 @@ soup = soup.find(id='mw-content-text')
 # these correspond to 1.1, 1.2...1.17--i.e. the genres
 genre_soup = soup.find_all('h3')
 
+genealogy = []
+
 for genre in genre_soup:
     # within h3 this span describes the big bold visible heading
     genre_name = genre.find_all('span', {'class':'mw-headline'})
@@ -57,13 +44,24 @@ for genre in genre_soup:
         genre = genre.next_sibling
         # can be held in next div if many or ul if few
         try:
-            if genre.name == 'div':
-                subgenres = genre.select('ul > li')
-                break
-            elif genre.name == 'ul':
-                subgenres = genre.select('li')
+            # if genre.name == 'div':
+            #     subgenres = genre.select('ul > li')
+            #     break
+            # elif genre.name == 'ul':
+            #     subgenres = genre.select('li')
+            #     break
+            if (genre.name == 'div') or (genre.name == 'ul'):
+                subgenres = genre.find_all('li')
                 break
         except AttributeError: pass
 
+
     # we now have the chunk of contents that corresponds to genre_name stored in subgenres
-    # now comes the hard part
+    for li in subgenres:
+        # parent_child = find_parent(li)
+        genealogy.append(get_string(li))
+
+    if genre_name == 'Asian': break
+
+with codecs.open('draft_out.txt', 'w', 'utf-8-sig') as z:
+    z.write(str(genealogy))
