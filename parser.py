@@ -16,7 +16,26 @@ def get_string(tag):
         ls = tag.find('a')
         return ls.string
     else:
-        return s    
+        return s
+
+def gv_generate(t, filename):
+    manual_head = (
+        u'graph beta{\n',
+        u'    page="8.5,11";\n',
+        u'    ratio=fill;\n')
+    manual_foot = u'}'
+    tab = u'    '
+    # format = '    %s -- %s;' % (parent, child)
+    with codecs.open(filename, 'w', 'utf-8-sig') as p:
+        for x in manual_head:
+            p.write(x)
+
+        for tup in t:
+            line = u'%s"%s" -- "%s";\n' % (tab, tup[0], tup[1])
+            p.write(line)
+
+        p.write(manual_foot)
+
 # END DEFINITIONS
 
 
@@ -94,5 +113,8 @@ for genre in genre_soup:
     # elif genre_name == 'Electronica': break # db
 
 
-with codecs.open('beta_out.txt', 'w', 'utf-8-sig') as z:
-    z.write(str(genealogy))
+# with codecs.open('beta_out.txt', 'w', 'utf-8-sig') as z:
+#     z.write(str(genealogy))
+
+gv_generate(genealogy, 'first_try.gv')
+
