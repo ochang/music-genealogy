@@ -18,23 +18,32 @@ def get_string(tag):
     else:
         return s
 
-def gv_generate(t, filename):
+def gv_generate(t):
+    tab = u'    '
     manual_head = (
         u'graph beta{\n',
-        u'    page="8.5,11";\n',
-        u'    ratio=fill;\n')
+        u'%spage="8.5,11";\n'%tab,
+        u'%sratio=fill;\n'%tab,
+        u'%sshape=box;\n'%tab,)
     manual_foot = u'}'
-    tab = u'    '
-    # format = '    %s -- %s;' % (parent, child)
-    with codecs.open(filename, 'w', 'utf-8-sig') as p:
-        for x in manual_head:
-            p.write(x)
 
-        for tup in t:
-            line = u'%s"%s" -- "%s";\n' % (tab, tup[0], tup[1])
-            p.write(line)
+    
 
-        p.write(manual_foot)
+    for element in t:
+        genre_name = element[0]
+        genre_list = element[1]
+        filename = 'z_' + genre_name + '_beta.gv'
+
+        with codecs.open(filename, 'w', 'utf-8-sig') as p:
+            for x in manual_head:
+                p.write(x)
+
+            for tup in genre_list:
+                if tup[0] != tup[1]:
+                    line = u'%s"%s" -- "%s";\n' % (tab, tup[0], tup[1])
+                    p.write(line)
+
+            p.write(manual_foot)
 
 # END DEFINITIONS
 
@@ -53,6 +62,8 @@ genre_soup = soup.find_all('h3')
 genealogy = []
 
 for genre in genre_soup:
+    genre_specific_list = []
+
     # within h3 this span describes the big bold visible heading
     genre_name = genre.find_all('span', {'class':'mw-headline'})
     genre_name = get_string(genre_name[0])
@@ -74,17 +85,15 @@ for genre in genre_soup:
         except AttributeError: pass
 
     # we now have the chunk of contents that corresponds to genre_name stored in subgenres
-    # if genre_name == 'Electronic': # db
     for li in subgenres:
         li_name = get_string(li)
         # print 'Specific genre: ' + li_name
 
-        # if li_name == 'Nu-disco': break
-
         while True:
+            # honestly, I do not know how this works
             li = li.parent
-
             yyy = li.previous_sibling
+
             if yyy == '\n':
                 zzz = yyy.previous_sibling
 
@@ -92,29 +101,17 @@ for genre in genre_soup:
                 if zzz.name == 'a':
                     parent = get_string(zzz)
                 else:
-                    # print zzz
-                    # <h3>
-                        # <span class="editsection">
-                            # [<a href="http://en.wikipedia.org/w/index.php?title=List_of_popular_music_genres&amp;action=edit&amp;section=7" title="Edit section: Country">edit</a>]
-                        # </span> 
-                        # <span class="mw-headline" id="Country">
-                            # <a href="http://en.wikipedia.org/wiki/Country_music" title="Country music">Country</a>
-                        # </span>
-                    # </h3>
-
-                    # at relative top level
+                    # at h3, the name of the genre
                     parent = genre_name
                 # print 'parent: ' + parent
                 break
         uuu = (parent, li_name)
-        # print uuu
-        genealogy.append(uuu)
-        # print '============' # db
-    # elif genre_name == 'Electronica': break # db
 
 
-# with codecs.open('beta_out.txt', 'w', 'utf-8-sig') as z:
-#     z.write(str(genealogy))
+        genre_specific_list.append(uuu)
 
-gv_generate(genealogy, 'first_try.gv')
+    genealogy.append((genre_name, genre_specific_list))
+    # go to next genre
+
+gv_generate(genealogy)
 

@@ -1,0 +1,28 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "Latin American" -- "Axé";
+    "Latin American" -- "Bachata";
+    "Latin American" -- "Baithak Gana";
+    "Latin American" -- "Bossa Nova";
+    "Latin American" -- "Calypso";
+    "Latin American" -- "Chutney";
+    "Latin American" -- "Chutney soca";
+    "Latin American" -- "Cumbia";
+    "Latin American" -- "Huayño";
+    "Latin American" -- "Kompa";
+    "Latin American" -- "Mambo";
+    "Latin American" -- "Mariachi";
+    "Latin American" -- "Merengue";
+    "Latin American" -- "Música Popular Brasileira";
+    "Latin American" -- "Ranchera";
+    "Latin American" -- "Reggaeton";
+    "Latin American" -- "Salsa";
+    "Latin American" -- "Samba";
+    "Latin American" -- "Soca";
+    "Latin American" -- "Son";
+    "Latin American" -- "Tejano";
+    "Latin American" -- "Tropicalismo";
+    "Latin American" -- "Zouk";
+}

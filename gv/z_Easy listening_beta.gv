@@ -1,0 +1,12 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "Easy listening" -- "Background music";
+    "Easy listening" -- "Beautiful music";
+    "Easy listening" -- "Elevator music";
+    "Easy listening" -- "Furniture music";
+    "Easy listening" -- "Lounge music";
+    "Easy listening" -- "Middle of the road";
+    "Easy listening" -- "Adult Contemporary";
+}

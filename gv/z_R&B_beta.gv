@@ -1,0 +1,20 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "R&B" -- "Contemporary R&B";
+    "R&B" -- "Doo wop";
+    "R&B" -- "Funk";
+    "Funk" -- "Deep Funk";
+    "Funk" -- "Disco";
+    "Disco" -- "Post-disco";
+    "Disco" -- "Boogie";
+    "Funk" -- "Go-go";
+    "Funk" -- "P-Funk";
+    "R&B" -- "New jack swing";
+    "R&B" -- "Soul";
+    "Soul" -- "Blue-eyed soul";
+    "Soul" -- "Hip hop soul";
+    "Soul" -- "Northern soul";
+    "Soul" -- "Neo soul";
+}

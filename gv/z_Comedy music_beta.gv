@@ -1,0 +1,7 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "Comedy music" -- "Comedy rock";
+    "Comedy music" -- "Parody music";
+}

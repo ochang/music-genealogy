@@ -1,0 +1,12 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "Other" -- "Contemporary Christian";
+    "Other" -- "Laïkó";
+    "Other" -- "Pinoy pop";
+    "Other" -- "Schlager";
+    "Other" -- "Sung poetry";
+    "Other" -- "Upscale";
+    "Other" -- "Worldbeat";
+}

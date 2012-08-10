@@ -1,0 +1,9 @@
+﻿graph beta{
+    page="8.5,11";
+    ratio=fill;
+    shape=box;
+    "Avant-Garde" -- "Experimental music";
+    "Avant-Garde" -- "Noise";
+    "Avant-Garde" -- "Lo-fi";
+    "Avant-Garde" -- "Musique concrète";
+}
