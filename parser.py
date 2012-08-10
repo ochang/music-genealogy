@@ -30,7 +30,7 @@ def gv_generate(t):
         filename = genre_name + '_beta.gv'
 
         header = (
-        u'graph %s{\n'%genre_name,
+        u'graph "%s"{\n'%genre_name,
         u'%spage="8.5,11";\n'%tab,
         u'%sratio=fill;\n'%tab,
         u'%soverlap=false;\n'%tab,
