@@ -1,7 +1,8 @@
-﻿graph beta{
+﻿graph Latin American{
     page="8.5,11";
     ratio=fill;
-    shape=box;
+    overlap=false;
+    "Latin American"[shape=box];
     "Latin American" -- "Axé";
     "Latin American" -- "Bachata";
     "Latin American" -- "Baithak Gana";

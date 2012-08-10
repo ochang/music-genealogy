@@ -20,11 +20,6 @@ def get_string(tag):
 
 def gv_generate(t):
     tab = u'    '
-    manual_head = (
-        u'graph beta{\n',
-        u'%spage="8.5,11";\n'%tab,
-        u'%sratio=fill;\n'%tab,
-        u'%sshape=box;\n'%tab,)
     manual_foot = u'}'
 
     
@@ -32,10 +27,17 @@ def gv_generate(t):
     for element in t:
         genre_name = element[0]
         genre_list = element[1]
-        filename = 'z_' + genre_name + '_beta.gv'
+        filename = genre_name + '_beta.gv'
+
+        header = (
+        u'graph %s{\n'%genre_name,
+        u'%spage="8.5,11";\n'%tab,
+        u'%sratio=fill;\n'%tab,
+        u'%soverlap=false;\n'%tab,
+        u'%s"%s"[shape=box];\n'%(tab, genre_name))
 
         with codecs.open(filename, 'w', 'utf-8-sig') as p:
-            for x in manual_head:
+            for x in header:
                 p.write(x)
 
             for tup in genre_list:

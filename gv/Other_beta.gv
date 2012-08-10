@@ -1,7 +1,8 @@
-﻿graph beta{
+﻿graph Other{
     page="8.5,11";
     ratio=fill;
-    shape=box;
+    overlap=false;
+    "Other"[shape=box];
     "Other" -- "Contemporary Christian";
     "Other" -- "Laïkó";
     "Other" -- "Pinoy pop";

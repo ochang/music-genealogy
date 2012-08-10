@@ -1,7 +1,8 @@
-﻿graph beta{
+﻿graph African{
     page="8.5,11";
     ratio=fill;
-    shape=box;
+    overlap=false;
+    "African"[shape=box];
     "African" -- "Afrobeat";
     "African" -- "Apala";
     "African" -- "Benga";
