@@ -55,44 +55,44 @@ for genre in genre_soup:
         except AttributeError: pass
 
     # we now have the chunk of contents that corresponds to genre_name stored in subgenres
-    if genre_name == 'Electronic': # db
-        for li in subgenres:
-            li_name = get_string(li)
-            # print 'Specific genre: ' + li_name
+    # if genre_name == 'Electronic': # db
+    for li in subgenres:
+        li_name = get_string(li)
+        # print 'Specific genre: ' + li_name
 
-            # if li_name == 'Nu-disco': break
+        # if li_name == 'Nu-disco': break
 
-            while True:
-                li = li.parent
+        while True:
+            li = li.parent
 
-                yyy = li.previous_sibling
-                if yyy == '\n':
-                    zzz = yyy.previous_sibling
+            yyy = li.previous_sibling
+            if yyy == '\n':
+                zzz = yyy.previous_sibling
 
-                if zzz != None:
-                    if zzz.name == 'a':
-                        parent = get_string(zzz)
-                    else:
-                        # print zzz
-                        # <h3>
-                            # <span class="editsection">
-                                # [<a href="http://en.wikipedia.org/w/index.php?title=List_of_popular_music_genres&amp;action=edit&amp;section=7" title="Edit section: Country">edit</a>]
-                            # </span> 
-                            # <span class="mw-headline" id="Country">
-                                # <a href="http://en.wikipedia.org/wiki/Country_music" title="Country music">Country</a>
-                            # </span>
-                        # </h3>
+            if zzz != None:
+                if zzz.name == 'a':
+                    parent = get_string(zzz)
+                else:
+                    # print zzz
+                    # <h3>
+                        # <span class="editsection">
+                            # [<a href="http://en.wikipedia.org/w/index.php?title=List_of_popular_music_genres&amp;action=edit&amp;section=7" title="Edit section: Country">edit</a>]
+                        # </span> 
+                        # <span class="mw-headline" id="Country">
+                            # <a href="http://en.wikipedia.org/wiki/Country_music" title="Country music">Country</a>
+                        # </span>
+                    # </h3>
 
-                        # at relative top level
-                        parent = genre_name
-                    # print 'parent: ' + parent
-                    break
-            uuu = (parent, li_name)
-            # print uuu
-            genealogy.append(uuu)
-            # print '============' # db
-    elif genre_name == 'Electronica': break # db
+                    # at relative top level
+                    parent = genre_name
+                # print 'parent: ' + parent
+                break
+        uuu = (parent, li_name)
+        # print uuu
+        genealogy.append(uuu)
+        # print '============' # db
+    # elif genre_name == 'Electronica': break # db
 
 
-with codecs.open('draft_out.txt', 'w', 'utf-8-sig') as z:
+with codecs.open('beta_out.txt', 'w', 'utf-8-sig') as z:
     z.write(str(genealogy))
