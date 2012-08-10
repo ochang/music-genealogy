@@ -55,32 +55,44 @@ for genre in genre_soup:
         except AttributeError: pass
 
     # we now have the chunk of contents that corresponds to genre_name stored in subgenres
-    if genre_name == 'Country':
+    if genre_name == 'Electronic': # db
         for li in subgenres:
             li_name = get_string(li)
-            print 'Node name:' + li_name
-            if li_name == 'Bluegrass': break
+            # print 'Specific genre: ' + li_name
+
+            # if li_name == 'Nu-disco': break
 
             while True:
                 li = li.parent
-                # print get_string(li)
 
                 yyy = li.previous_sibling
                 if yyy == '\n':
                     zzz = yyy.previous_sibling
 
                 if zzz != None:
-                    print 'parent:'
                     if zzz.name == 'a':
-                        print get_string(zzz)
+                        parent = get_string(zzz)
                     else:
-                        # we are already at top sublevel!
-                        print genre_name
+                        # print zzz
+                        # <h3>
+                            # <span class="editsection">
+                                # [<a href="http://en.wikipedia.org/w/index.php?title=List_of_popular_music_genres&amp;action=edit&amp;section=7" title="Edit section: Country">edit</a>]
+                            # </span> 
+                            # <span class="mw-headline" id="Country">
+                                # <a href="http://en.wikipedia.org/wiki/Country_music" title="Country music">Country</a>
+                            # </span>
+                        # </h3>
+
+                        # at relative top level
+                        parent = genre_name
+                    # print 'parent: ' + parent
                     break
+            uuu = (parent, li_name)
+            # print uuu
+            genealogy.append(uuu)
+            # print '============' # db
+    elif genre_name == 'Electronica': break # db
 
-            print '============'
-    elif genre_name == 'Easy listening':break
 
-
-# with codecs.open('draft_out.txt', 'w', 'utf-8-sig') as z:
-#     z.write(str(genealogy))
+with codecs.open('draft_out.txt', 'w', 'utf-8-sig') as z:
+    z.write(str(genealogy))
