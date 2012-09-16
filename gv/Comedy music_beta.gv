@@ -1,8 +1,0 @@
-﻿graph Comedy music{
-    page="8.5,11";
-    ratio=fill;
-    overlap=false;
-    "Comedy music"[shape=box];
-    "Comedy music" -- "Comedy rock";
-    "Comedy music" -- "Parody music";
-}

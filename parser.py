@@ -1,8 +1,18 @@
+"""
+theoretically, this script can be used for any wikipedia list
+which is laid out in the same manner
+
+also, this would probably be a lot easier if it used the mediawiki api since
+normal wikipedia pages are whack
+"""
+
 # BEGIN IMPORTS
 import os
 import sys
 import codecs
+from subprocess import call
 
+import requests
 from bs4 import BeautifulSoup
 # END IMPORTS
 
@@ -19,22 +29,22 @@ def get_string(tag):
         return s
 
 def gv_generate(t):
-    tab = u'    '
+    """
+    given output of parser(), generates gv files using the template described in ugly detail below
+    """
     manual_foot = u'}'
-
-    
 
     for element in t:
         genre_name = element[0]
         genre_list = element[1]
-        filename = genre_name + '_beta.gv'
+        filename = genre_name + '.gv'
 
         header = (
-        u'graph "%s"{\n'%genre_name,
-        u'%spage="8.5,11";\n'%tab,
-        u'%sratio=fill;\n'%tab,
-        u'%soverlap=false;\n'%tab,
-        u'%s"%s"[shape=box];\n'%(tab, genre_name))
+        u'graph "%s"{\n' % genre_name,
+        u'\tpage="8.5,11";\n',
+        u'\tratio=fill;\n',
+        u'\toverlap=false;\n',
+        u'\t"%s"[shape=box];\n' % genre_name)
 
         with codecs.open(filename, 'w', 'utf-8-sig') as p:
             for x in header:
@@ -42,78 +52,125 @@ def gv_generate(t):
 
             for tup in genre_list:
                 if tup[0] != tup[1]:
-                    line = u'%s"%s" -- "%s";\n' % (tab, tup[0], tup[1])
+                    line = u'\t"%s" -- "%s";\n' % (tup[0], tup[1])
                     p.write(line)
 
             p.write(manual_foot)
 
+def parser(soup):
+    """
+    parses hierarchy out of files like wiki.html
+    theoreticaly any other wiki page of the same style as well
+
+    returns a list of lists of direct parent-child rels stored in tuples for each genre
+    """
+
+    # narrows field through css selectors to only page content
+    soup = soup.find(id='mw-content-text')
+    # further narow field by creating a list of all the h3s
+    # these correspond to 1.1, 1.2...1.17--i.e. the genres
+    genre_soup = soup.find_all('h3')
+
+    genealogy = []
+
+    for genre in genre_soup:
+        genre_specific_list = []
+
+        # within h3 this span describes the big bold visible heading
+        genre_name = genre.find_all('span', {'class':'mw-headline'})
+        genre_name = get_string(genre_name[0])
+
+        # find the grouping that describes all the sub-genres
+        # i.e. the top level, the first group of <li>
+        while True:
+            genre = genre.next_sibling
+            # can be held in next div if many or ul if few
+            try:
+                if genre.name == 'div':
+                    subgenres = genre.select('ul > li')
+                    subgenres = genre.find_all('li')
+                    break
+                elif genre.name == 'ul':
+                    subgenres = genre.find_all('li')
+                    break
+            # if next sibling is not a div or ul
+            except AttributeError: pass
+
+        # we now have the chunk of contents that corresponds to genre_name stored in subgenres
+        for li in subgenres:
+            li_name = get_string(li)
+            # print 'Specific genre: ' + li_name
+
+            subgenre_data = None
+            while True:
+                # honestly, I do not know how this works
+
+                # reassign li to it's parent node
+                li = li.parent
+                prev_sib = li.previous_sibling
+
+                # if we still don't have actual content, go to next prev sib
+                # keep iterating through loop until we get some data
+                if prev_sib == '\n':
+                    subgenre_data = prev_sib.previous_sibling
+
+                if subgenre_data != None:
+                    # different cases for long and short lists of subgenres
+                    if subgenre_data.name == 'a':
+                        parent = get_string(subgenre_data)
+                    else:
+                        # at h3, the name of the genre
+                        parent = genre_name
+                    # print 'parent: ' + parent
+                    break
+
+            subgenre_genealogy = (parent, li_name)
+
+
+            genre_specific_list.append(subgenre_genealogy)
+
+        genealogy.append((genre_name, genre_specific_list))
+        # go to next genre
+
+    return genealogy
+
+def gen_png():
+    """
+    generates graphviz output by using command in CALL_ARGS
+    """
+    filelist = os.listdir('.')
+
+    for gv in filelist:
+        path =  os.path.abspath(gv)
+        output_path = os.path.splitext(gv)[0] + '.png' 
+        CALL_ARGS = ['twopi', '-Tpng', path, '-o', output_path]
+        call(CALL_ARGS)
 # END DEFINITIONS
 
 
+if __name__ == '__main__':
+    # open html to parse
+    with open('wiki.html', 'r') as W:
+        soup = BeautifulSoup(W.read())
 
-# open html to parse
-with open('wiki.html', 'r') as W:
-    soup = BeautifulSoup(W.read())
-
-# narrows field through css selectors to only page content
-soup = soup.find(id='mw-content-text')
-# further narow field by creating a list of all the h3s
-# these correspond to 1.1, 1.2...1.17--i.e. the genres
-genre_soup = soup.find_all('h3')
-
-genealogy = []
-
-for genre in genre_soup:
-    genre_specific_list = []
-
-    # within h3 this span describes the big bold visible heading
-    genre_name = genre.find_all('span', {'class':'mw-headline'})
-    genre_name = get_string(genre_name[0])
-
-    # find the grouping that describes all the sub-genres
-    # i.e. the top level, the first group of <li>
-    while True:
-        genre = genre.next_sibling
-        # can be held in next div if many or ul if few
-        try:
-            if genre.name == 'div':
-                subgenres = genre.select('ul > li')
-                subgenres = genre.find_all('li')
-                break
-            elif genre.name == 'ul':
-                subgenres = genre.find_all('li')
-                break
-        # if next sibling is not a div or ul
-        except AttributeError: pass
-
-    # we now have the chunk of contents that corresponds to genre_name stored in subgenres
-    for li in subgenres:
-        li_name = get_string(li)
-        # print 'Specific genre: ' + li_name
-
-        while True:
-            # honestly, I do not know how this works
-            li = li.parent
-            yyy = li.previous_sibling
-
-            if yyy == '\n':
-                zzz = yyy.previous_sibling
-
-            if zzz != None:
-                if zzz.name == 'a':
-                    parent = get_string(zzz)
-                else:
-                    # at h3, the name of the genre
-                    parent = genre_name
-                # print 'parent: ' + parent
-                break
-        uuu = (parent, li_name)
+    # optionally, fetch page
+    # print "Wiki URL or [ENTER]Break"
+    # print "Page better be formatted correctly!"
+    # earl = raw_input('> ')
+    # if earl == "":
+    #     print "query blank; assuming bad things"
+    #     raise SystemExit(0)
+    # else:
+    #     Page = requests.get(earl)
+    #     soup = BeautifulSoup(Page.content)
 
 
-        genre_specific_list.append(uuu)
 
-    genealogy.append((genre_name, genre_specific_list))
-    # go to next genre
+    # parse
+    genealogy = parser(soup)
 
-gv_generate(genealogy)
-
+    # save to gv files
+    os.chdir(os.path.join(os.getcwd(), 'output'))
+    gv_generate(genealogy)
+    # generate png output
+    gen_png()

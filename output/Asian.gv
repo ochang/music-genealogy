@@ -1,0 +1,21 @@
+﻿graph "Asian"{
+	page="8.5,11";
+	ratio=fill;
+	overlap=false;
+	"Asian"[shape=box];
+	"Asian" -- "Anison";
+	"Asian" -- "Baila";
+	"Asian" -- "Bhangra";
+	"Asian" -- "Bollywood music";
+	"Asian" -- "Dangdut";
+	"Asian" -- "Enka";
+	"Asian" -- "Kayōkyoku";
+	"Asian" -- "Luk Thung";
+	"Luk Thung" -- "Luk Krung";
+	"Asian" -- "Manila Sound";
+	"Asian" -- "Morlam";
+	"Asian" -- "Onkyokei";
+	"Asian" -- "K-pop";
+	"Asian" -- "J-pop";
+	"Asian" -- "C-pop";
+}

@@ -1,0 +1,15 @@
+﻿graph "Ska"{
+	page="8.5,11";
+	ratio=fill;
+	overlap=false;
+	"Ska"[shape=box];
+	"Ska" -- "2 tone";
+	"Ska" -- "Dancehall";
+	"Ska" -- "Dub";
+	"Ska" -- "Lovers rock";
+	"Ska" -- "Ragga";
+	"Ska" -- "Reggae";
+	"Reggae" -- "Polish reggae";
+	"Ska" -- "Reggaefusion";
+	"Ska" -- "Rocksteady";
+}
