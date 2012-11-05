@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 theoretically, this script can be used for any wikipedia list
 which is laid out in the same manner
@@ -7,19 +9,20 @@ normal wikipedia pages are whack
 """
 
 # BEGIN IMPORTS
+from __future__ import unicode_literals
 import os
-import sys
 import codecs
 from subprocess import call
 
-import requests
+# import requests  # UNCOMMENT for web fetching
 from bs4 import BeautifulSoup
 # END IMPORTS
 
 
 # BEGIN DEFINITIONS
 def get_string(tag):
-    """ gets first string for hyperlinks with multpile strings """
+    """gets first string for hyperlinks with multpile strings
+    """
     s = tag.string
 
     if s == None:
@@ -28,11 +31,12 @@ def get_string(tag):
     else:
         return s
 
+
 def gv_generate(t):
+    """given output of parser(), generates gv files using the template
+    described in ugly detail below
     """
-    given output of parser(), generates gv files using the template described in ugly detail below
-    """
-    manual_foot = u'}'
+    manual_foot = '}'
 
     for element in t:
         genre_name = element[0]
@@ -40,11 +44,12 @@ def gv_generate(t):
         filename = genre_name + '.gv'
 
         header = (
-        u'graph "%s"{\n' % genre_name,
-        u'\tpage="8.5,11";\n',
-        u'\tratio=fill;\n',
-        u'\toverlap=false;\n',
-        u'\t"%s"[shape=box];\n' % genre_name)
+            'graph "' + genre_name + '" {\n',
+            '\tpage="8.5,11";\n',
+            '\tratio=fill;\n',
+            '\toverlap=false;\n',
+            '\t"' + genre_name + '"[shape=box];\n'
+        )
 
         with codecs.open(filename, 'w', 'utf-8-sig') as p:
             for x in header:
@@ -52,10 +57,11 @@ def gv_generate(t):
 
             for tup in genre_list:
                 if tup[0] != tup[1]:
-                    line = u'\t"%s" -- "%s";\n' % (tup[0], tup[1])
+                    line = '\t"%s" -- "%s";\n' % (tup[0], tup[1])
                     p.write(line)
 
             p.write(manual_foot)
+
 
 def parser(soup):
     """
@@ -77,7 +83,7 @@ def parser(soup):
         genre_specific_list = []
 
         # within h3 this span describes the big bold visible heading
-        genre_name = genre.find_all('span', {'class':'mw-headline'})
+        genre_name = genre.find_all('span', {'class': 'mw-headline'})
         genre_name = get_string(genre_name[0])
 
         # find the grouping that describes all the sub-genres
@@ -94,7 +100,8 @@ def parser(soup):
                     subgenres = genre.find_all('li')
                     break
             # if next sibling is not a div or ul
-            except AttributeError: pass
+            except AttributeError:
+                pass
 
         # we now have the chunk of contents that corresponds to genre_name stored in subgenres
         for li in subgenres:
@@ -125,14 +132,16 @@ def parser(soup):
                     break
 
             subgenre_genealogy = (parent, li_name)
-
-
+            # append all subgenres to a genre list
+            # then go to the next subgenre
             genre_specific_list.append(subgenre_genealogy)
 
+        # append all genre stuff to megalist
+        # then go to the next genre
         genealogy.append((genre_name, genre_specific_list))
-        # go to next genre
 
     return genealogy
+
 
 def gen_png():
     """
@@ -141,10 +150,13 @@ def gen_png():
     filelist = os.listdir('.')
 
     for gv in filelist:
-        path =  os.path.abspath(gv)
-        output_path = os.path.splitext(gv)[0] + '.png' 
-        CALL_ARGS = ['twopi', '-Tpng', path, '-o', output_path]
-        call(CALL_ARGS)
+        input_path = os.path.abspath(gv)
+        output_path = os.path.splitext(gv)[0] + '.png'
+        args = [
+            'twopi', '-Gconcentrate=true', '-Tpng', input_path,
+            '-o', output_path
+        ]
+        call(args)
 # END DEFINITIONS
 
 
@@ -154,6 +166,7 @@ if __name__ == '__main__':
         soup = BeautifulSoup(W.read())
 
     # optionally, fetch page
+    # remember to uncomment requests import at top
     # print "Wiki URL or [ENTER]Break"
     # print "Page better be formatted correctly!"
     # earl = raw_input('> ')
@@ -163,8 +176,6 @@ if __name__ == '__main__':
     # else:
     #     Page = requests.get(earl)
     #     soup = BeautifulSoup(Page.content)
-
-
 
     # parse
     genealogy = parser(soup)
