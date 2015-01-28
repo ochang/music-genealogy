@@ -1,4 +1,4 @@
-﻿graph "Modern folk"{
+﻿graph "Modern folk" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

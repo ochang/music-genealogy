@@ -1,4 +1,4 @@
-﻿graph "Avant-Garde"{
+﻿graph "Avant-Garde" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

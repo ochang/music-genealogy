@@ -1,4 +1,4 @@
-﻿graph "R&B"{
+﻿graph "R&B" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

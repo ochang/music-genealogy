@@ -1,4 +1,4 @@
-﻿graph "Blues"{
+﻿graph "Blues" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

@@ -1,4 +1,4 @@
-﻿graph "Other"{
+﻿graph "Other" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

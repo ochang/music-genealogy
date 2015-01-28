@@ -1,4 +1,4 @@
-﻿graph "Easy listening"{
+﻿graph "Easy listening" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

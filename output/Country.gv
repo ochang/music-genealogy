@@ -1,4 +1,4 @@
-﻿graph "Country"{
+﻿graph "Country" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

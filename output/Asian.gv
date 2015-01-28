@@ -1,4 +1,4 @@
-﻿graph "Asian"{
+﻿graph "Asian" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

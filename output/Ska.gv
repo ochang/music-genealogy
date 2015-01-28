@@ -1,4 +1,4 @@
-﻿graph "Ska"{
+﻿graph "Ska" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

@@ -1,4 +1,4 @@
-﻿graph "Jazz"{
+﻿graph "Jazz" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;

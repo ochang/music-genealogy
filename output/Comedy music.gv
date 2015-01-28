@@ -1,4 +1,4 @@
-﻿graph "Comedy music"{
+﻿graph "Comedy music" {
 	page="8.5,11";
 	ratio=fill;
 	overlap=false;
